@@ -18,7 +18,7 @@ app.use("/webhook/razorpay", bodyParser.raw({ type: "application/json" }));
 
 mongoose
   .connect(
-    "mongodb+srv://krishnakant_db_user:<password>@cluster0.ttpqlds.mongodb.net/mernAuth?retryWrites=true&w=majority"
+    "mongodb+srv://krishnakant_db_user:Krishna%4010@cluster0.ttpqlds.mongodb.net/mernAuth?retryWrites=true&w=majority"
   )
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
