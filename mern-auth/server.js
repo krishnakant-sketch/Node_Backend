@@ -75,20 +75,7 @@ app.get("/dashboard", authMiddleware, (req, res) => {
 });
 
 app.use(cors());
-// Upload or update profile image
-// app.post("/profile", async (req, res) => {
-//   const { image } = req.body; // Base64 string or URL
-//   try {
-//     const user = await User.findByIdAndUpdate(
-//       req.user.id,
-//       { profileImage: image },
-//       { new: true }
-//     );
-//     res.json({ message: "Profile image updated", profileImage: user.profileImage });
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to update profile image" });
-//   }
-// });
+
 
 const multer = require("multer");
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 } }); // 5 MB
@@ -109,14 +96,6 @@ app.post("/profile", upload.single("image"), async (req, res) => {
   }
 });
 
-// app.get("/profile", async (req, res) => {
-//   try {
-//     console.log("Fetching profile for user:", req.user.id);
-//     res.json({ profileImage: "http://localhost:4000/path/to/default/image.jpg" });
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to fetch profile image" });
-//   }
-// });
 
 app.get("/profile", authMiddleware, async (req, res) => {
   try {
@@ -130,55 +109,6 @@ app.get("/profile", authMiddleware, async (req, res) => {
 });
 
 // make sure to install: npm install node-fetch
-
-// app.get("/gold", async (req, res) => {
-//   try {
-//     const response = await fetch("https://www.goldapi.io/api/XAU/INR", {
-//       method: "GET",
-//       headers: {
-//         "x-access-token": "goldapi-abtui9smk0tevn1-io", // your API key
-//         "Content-Type": "application/json",
-//       },
-//     });
-
-//     const data = await response.json();
-//     res.json(data); // send gold rate to frontend
-//   } catch (error) {
-//     console.error("Error fetching gold rate:", error);
-//     res.status(500).json({ error: "Failed to fetch gold rate" });
-//   }
-// });
-
-// async function getGoldRate() {
-//   const response = await fetch("https://www.goldapi.io/api/XAU/INR", {
-//     method: "GET",
-//     headers: {
-//       "x-access-token": "goldapi-abtui9smk0tevn1-io",
-//       "Content-Type": "application/json",
-//     },
-//   });
-//   return await response.json();
-// }
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: { origin: "*" }, // allow frontend
-// });
-
-// io.on("connection", (socket) => {
-//   console.log("Client connected:", socket.id); // Send updates every 60 seconds const
-//   interval = setInterval(async () => {
-//     try {
-//       const data = await getGoldRate();
-//       socket.emit("goldRateUpdate", data);
-//     } catch (err) {
-//       console.error("Error fetching gold rate:", err);
-//     }
-//   }, 60000);
-//   socket.on("disconnect", () => {
-//     clearInterval(interval);
-//     console.log("Client disconnected:", socket.id);
-//   });
-// });
 
 const razorpay = new Razorpay({
   key_id: "key_id",
@@ -288,6 +218,13 @@ app.post("/webhook/razorpay", async (req, res) => {
 
 // REST route for initial list
 app.use("/transactions", transactionsRoute);
+
+const io = new Server(http.createServer(app), {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
 
 // Socket.IO connection (optional logs)
 io.on("connection", (socket) => {
