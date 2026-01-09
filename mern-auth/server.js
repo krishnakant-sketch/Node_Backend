@@ -225,7 +225,6 @@ const io = new Server(http.createServer(app), {
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
-
 // Socket.IO connection (optional logs)
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
